@@ -45,7 +45,7 @@ def create_app():
     api.add_resource(UserCreateView, "/register")
     api.add_resource(UserLoginView, "/login")
     api.add_resource(ArticleCreateView, "/articles")
-    api.add_resource(ArticleGetView, "/articles<:id>")
+    api.add_resource(ArticleGetView, "/articles/<id>")
 
     # @app.route('/register', methods=['POST', 'GET'])
     # def register():
