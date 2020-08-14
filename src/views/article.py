@@ -7,7 +7,7 @@ from ..models.article import Article
 
 
 class ArticleCreateView(Resource):
-   # @login_required
+    @login_required
     def post(self):
         content = request.form.get('content')
         if not content:
@@ -19,7 +19,7 @@ class ArticleCreateView(Resource):
         return {'id': article.id}, 200
 
 class ArticleGetView(Resource):
-  #  @login_required
+    @login_required
     def get(self, id):
         article = db.session.query(Article).filter_by(id=id).first()
         if not article:

@@ -6,6 +6,7 @@ class User(db.Model):
     password = db.Column(db.String(255))
     is_user_active = db.Column(db.Boolean, default=True)
     confirmed_at = db.Column(db.DateTime)
+    is_confirmed = db.Column(db.Boolean(), nullable=False, default=True)
 
     @property
     def is_active(self):
