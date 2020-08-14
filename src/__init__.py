@@ -2,19 +2,25 @@ from flask import Flask, render_template, request, redirect, url_for, make_respo
 from flask_sqlalchemy import SQLAlchemy
 from flask_security import Security, SQLAlchemyUserDatastore, login_required
 from flask_restful import Api
-from flask_wtf.csrf import CSRFProtect
+from flask_login import LoginManager
 
 app = Flask(__name__)
 db = SQLAlchemy()
+login_manager = LoginManager()
 
-from flask_wtf import FlaskForm
-from wtforms import StringField
-from wtforms.validators import DataRequired
-class MyForm(FlaskForm):
-    name = StringField('name', validators=[DataRequired()])
+def init_login():
+    from .models.user import User
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return db.session.query(User).filter_by(id=user_id).first()
+
+def reinit_db(app):
+    with app.app_context():
+        db.drop_all()
+        db.create_all()
 
 def create_app():
-    from .models.user import get_datastore
 
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
@@ -23,9 +29,9 @@ def create_app():
     configure_app(app)
 
     db.init_app(app)
-    security = Security(app, get_datastore())
-    #CSRFProtect(app)
     api = Api(app)
+    login_manager.init_app(app)
+    init_login()
 
     @app.route('/profile')
     @login_required
@@ -33,8 +39,13 @@ def create_app():
         from flask import g
         return render_template('profile.html')
 
-    from .views.user import UserCreateView
+    from .views.user import UserCreateView, UserLoginView
+    from .views.article import ArticleCreateView, ArticleGetView
+
     api.add_resource(UserCreateView, "/register")
+    api.add_resource(UserLoginView, "/login")
+    api.add_resource(ArticleCreateView, "/articles")
+    api.add_resource(ArticleGetView, "/articles<:id>")
 
     # @app.route('/register', methods=['POST', 'GET'])
     # def register():
@@ -59,9 +70,3 @@ def create_app():
 def configure_app(app):  # pragma: no cover
     from src.config import Config
     app.config.from_object(Config)
-
-    app.config["SECURITY_CSRF_COOKIE"] = {"key": "XSRF-TOKEN"}
-    app.config["WTF_CSRF_TIME_LIMIT"] = None
-
-    # You can't get the cookie until you are logged in.
-    app.config["SECURITY_CSRF_IGNORE_UNAUTH_ENDPOINTS"] = True
