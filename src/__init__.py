@@ -1,8 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, make_response, session
 from flask_sqlalchemy import SQLAlchemy
-from flask_security import Security, SQLAlchemyUserDatastore, login_required, \
-    UserMixin, RoleMixin
-from flask_security.utils import hash_password
+from flask_security import Security, SQLAlchemyUserDatastore, login_required
+from flask_restful import Api
 from flask_wtf.csrf import CSRFProtect
 
 app = Flask(__name__)
@@ -25,7 +24,8 @@ def create_app():
 
     db.init_app(app)
     security = Security(app, get_datastore())
-    CSRFProtect(app)
+    #CSRFProtect(app)
+    api = Api(app)
 
     @app.route('/profile')
     @login_required
@@ -33,23 +33,26 @@ def create_app():
         from flask import g
         return render_template('profile.html')
 
-    @app.route('/register', methods=['POST', 'GET'])
-    def register():
-        from flask import g
-        if request.method == 'POST':
-            get_datastore().create_user(
-                email=request.form.get('email'),
-                password=hash_password(request.form.get('password'))
-            )
-            db.session.commit()
+    from .views.user import UserCreateView
+    api.add_resource(UserCreateView, "/register")
 
-            return redirect(url_for('profile'))
-
-        return render_template('register.html', form=MyForm())
-
-        # resp = make_response(render_template('register.html', form=MyForm()))
-        # resp.set_cookie('csrf-token', session['csrf_token'])
-        # return resp
+    # @app.route('/register', methods=['POST', 'GET'])
+    # def register():
+    #     from flask import g
+    #     if request.method == 'POST':
+    #         get_datastore().create_user(
+    #             email=request.form.get('email'),
+    #             password=hash_password(request.form.get('password'))
+    #         )
+    #         db.session.commit()
+    #
+    #         return redirect(url_for('profile'))
+    #
+    #     return render_template('register.html', form=MyForm())
+    #
+    #     # resp = make_response(render_template('register.html', form=MyForm()))
+    #     # resp.set_cookie('csrf-token', session['csrf_token'])
+    #     # return resp
 
     return app
 
