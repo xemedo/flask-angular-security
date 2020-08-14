@@ -1,5 +1,5 @@
-from main import db
-from flask_security import Security, SQLAlchemyUserDatastore
+from src.__init__ import db
+from flask_security import SQLAlchemyUserDatastore
 from flask_security import UserMixin, RoleMixin
 
 users_roles = db.Table("roles_users",
