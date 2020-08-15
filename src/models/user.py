@@ -1,24 +1,26 @@
 from .. import db
+from flask_security import UserMixin, RoleMixin, SQLAlchemyUserDatastore
 
-class User(db.Model):
+roles_users = db.Table('roles_users',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('role_id', db.Integer, db.ForeignKey('role.id')))
+
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(255), unique=True)
+    username = db.Column(db.String(255), unique=True, nullable=False)
+    email = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(255))
-    is_user_active = db.Column(db.Boolean, default=True)
+    active = db.Column(db.Boolean)
     confirmed_at = db.Column(db.DateTime)
-    is_confirmed = db.Column(db.Boolean(), nullable=False, default=True)
+    roles = db.relationship(
+        'Role',
+        secondary=roles_users,
+        backref=db.backref('users', lazy='dynamic')
+    )
 
-    @property
-    def is_active(self):
-        return self.is_user_active
+class Role(db.Model, RoleMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(40))
+    description = db.Column(db.String(255))
 
-    @property
-    def is_authenticated(self):
-        return self.is_confirmed
-
-    @property
-    def is_anonymous(self):
-        return False
-
-    def get_id(self):
-        return str(self.id)
+user_datastore = SQLAlchemyUserDatastore(db, User, Role)

@@ -4,6 +4,10 @@ from flask_security import Security, SQLAlchemyUserDatastore, login_required
 from flask_restful import Api
 from flask_login import LoginManager
 
+from src.forms.flask_security_extensions import *
+
+import flask_wtf
+
 app = Flask(__name__)
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -20,6 +24,37 @@ def reinit_db(app):
         db.drop_all()
         db.create_all()
 
+def configure_flask_security(app):
+    from .models.user import user_datastore
+    # send CSRF cookie with the following key name
+    app.config["SECURITY_CSRF_COOKIE"] = {"key": "XSRF-TOKEN"}
+
+    # Don't have csrf tokens expire (they are invalid after logout)
+    app.config["WTF_CSRF_TIME_LIMIT"] = None
+
+    # don't return the CSRF cookie until user is logged in
+    app.config["SECURITY_CSRF_IGNORE_UNAUTH_ENDPOINTS"] = True
+
+    # disable WTF CSRF check since flask-security implements its own measures
+    app.config["WTF_CSRF_CHECK_DEFAULT"] = False
+
+    # allow login using username or email
+    app.config["SECURITY_USER_IDENTITY_ATTRIBUTES"] = ["email", 'username']
+
+    # allow registration of users
+    app.config['SECURITY_REGISTERABLE'] = True
+
+    # don't send registration email as we didn't specify a provider
+    app.config['SECURITY_SEND_REGISTER_EMAIL'] = False
+
+    # for security reasons always send the same message when username or password is wrong
+    app.config['SECURITY_MSG_INVALID_PASSWORD'] = ('Wrong username or password.', 'error')
+    app.config['SECURITY_MSG_USER_DOES_NOT_EXIST'] = ('Wrong username or password.', 'error')
+
+    # Enable CSRF protection
+    flask_wtf.CSRFProtect(app)
+    Security(app, user_datastore, confirm_register_form=ExtendedRegisterForm, login_form=ExtendedLoginForm)
+
 def create_app():
 
     # create and configure the app
@@ -32,38 +67,12 @@ def create_app():
     api = Api(app)
     login_manager.init_app(app)
     init_login()
+    configure_flask_security(app)
 
-    @app.route('/profile')
-    @login_required
-    def profile():
-        from flask import g
-        return render_template('profile.html')
-
-    from .views.user import UserCreateView, UserLoginView
     from .views.article import ArticleCreateView, ArticleGetView
 
-    api.add_resource(UserCreateView, "/register")
-    api.add_resource(UserLoginView, "/login")
     api.add_resource(ArticleCreateView, "/articles")
     api.add_resource(ArticleGetView, "/articles/<id>")
-
-    # @app.route('/register', methods=['POST', 'GET'])
-    # def register():
-    #     from flask import g
-    #     if request.method == 'POST':
-    #         get_datastore().create_user(
-    #             email=request.form.get('email'),
-    #             password=hash_password(request.form.get('password'))
-    #         )
-    #         db.session.commit()
-    #
-    #         return redirect(url_for('profile'))
-    #
-    #     return render_template('register.html', form=MyForm())
-    #
-    #     # resp = make_response(render_template('register.html', form=MyForm()))
-    #     # resp.set_cookie('csrf-token', session['csrf_token'])
-    #     # return resp
 
     return app
 
