@@ -10,9 +10,34 @@
           <label for="password">Password</label>
           <input type="password" id="password" class="form-control" name="password" password required ngModel>
         </div>
+        <div *ngIf="!isLoginMode">
+          <div class="form-group">
+            <label for="first_name">Vorname</label>
+            <input type="text" id="first_name" class="form-control" name="first_name" required ngModel>
+          </div>
+          <div class="form-group">
+            <label for="last_name">Nachname</label>
+            <input type="text" id="last_name" class="form-control" name="last_name" required ngModel>
+          </div>
+          <div class="form-group">
+            <label for="email_address1">E-Mail</label>
+            <input type="text" id="email_address1" class="form-control" name="email_address1" required
+                   ngModel>
+          </div>
+          <div class="form-group">
+            <label for="email_address2">E-Mail Wiederholung</label>
+            <input type="text" id="email_address2" class="form-control" name="email_address2" required
+                   ngModel>
+          </div>
+          <div class="form-group">
+            <label for="phone_number">Telefon</label>
+            <input type="text" id="phone_number" class="form-control" name="phone_number" required ngModel>
+          </div>
+        </div>
 
         <div>
-          <button class="btn btn-primary">Einloggen</button>
+          <button class="btn btn-primary"
+                  [disabled]="!authForm.valid">{{ isLoginMode ? 'Einloggen' : 'Registrieren' }}</button>
         </div>
       </form>
       <br/>
