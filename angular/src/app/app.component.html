@@ -1,47 +1,47 @@
-<div class="container h-100">
-  <div class="row h-100">
-    <div class="col-6 offset-3 my-auto">
-      <form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)">
-        <div class="form-group">
-          <label for="user">Benutzername</label>
-          <input type="text" id="user" class="form-control" name="user" required ngModel>
-        </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" id="password" class="form-control" name="password" password required ngModel>
-        </div>
-        <div *ngIf="!isLoginMode">
-          <div class="form-group">
-            <label for="first_name">Vorname</label>
-            <input type="text" id="first_name" class="form-control" name="first_name" required ngModel>
-          </div>
-          <div class="form-group">
-            <label for="last_name">Nachname</label>
-            <input type="text" id="last_name" class="form-control" name="last_name" required ngModel>
-          </div>
-          <div class="form-group">
-            <label for="email_address1">E-Mail</label>
-            <input type="text" id="email_address1" class="form-control" name="email_address1" required
-                   ngModel>
-          </div>
-          <div class="form-group">
-            <label for="email_address2">E-Mail Wiederholung</label>
-            <input type="text" id="email_address2" class="form-control" name="email_address2" required
-                   ngModel>
-          </div>
-          <div class="form-group">
-            <label for="phone_number">Telefon</label>
-            <input type="text" id="phone_number" class="form-control" name="phone_number" required ngModel>
-          </div>
-        </div>
+<header>
+  <app-header></app-header>
+</header>
+<main class="container h-100">
 
-        <div>
-          <button class="btn btn-primary"
-                  [disabled]="!authForm.valid">{{ isLoginMode ? 'Einloggen' : 'Registrieren' }}</button>
+  <div class="row h-100">
+    <div class="wrapper my-auto col-6 offset-3">
+      <div class="form-wrapper border pl-5 pr-5 pt-4 pb-4 rounded">
+        <form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)">
+          <div class="form-group">
+            <label for="user">Benutzername</label>
+            <input type="text" id="user" class="form-control" name="user" required ngModel>
+          </div>
+          <div class="form-group">
+            <label for="password">Passwort</label>
+            <input type="password" id="password" class="form-control" name="password" password required ngModel>
+          </div>
+          <div *ngIf="!isLoginMode">
+            <div class="form-group">
+              <label for="email_address1">E-Mail</label>
+              <input type="text" id="email_address1" class="form-control" name="email_address1" required
+                     ngModel>
+            </div>
+            <div class="form-group">
+              <label for="email_address2">E-Mail Wiederholung</label>
+              <input type="text" id="email_address2" class="form-control" name="email_address2" required
+                     ngModel>
+            </div>
+          </div>
+
+          <div class="">
+            <button class="btn btn-primary mt-3"
+                    [disabled]="!authForm.valid">{{ isLoginMode ? 'Einloggen' : 'Registrieren' }}</button>
+          </div>
+        </form>
+        <br/>
+      </div>
+
+      <div *ngIf="isLoginMode">
+        <div class="border  pl-5 pr-5 pt-4 pb-4 rounded mt-4">
+          <span>Noch kein Konto? <a href="#" (click)="switchToRegistration()">Erstelle eines.</a></span>
         </div>
-      </form>
-      <br/>
+      </div>
 
     </div>
   </div>
-</div>
+</main>

@@ -1,10 +1,10 @@
-import {Injectable} from "@angular/core";
-import {NgForm} from "@angular/forms";
-import {Observable, throwError} from "rxjs";
-import {HttpClient, HttpErrorResponse} from "@angular/common/http";
-import {Utility} from "../shared/utility";
-import {catchError} from "rxjs/operators";
-import {tap} from "rxjs/internal/operators/tap";
+import {Injectable} from '@angular/core';
+import {NgForm} from '@angular/forms';
+import {Observable, throwError} from 'rxjs';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {Utility} from '../shared/utility';
+import {catchError} from 'rxjs/operators';
+import {tap} from 'rxjs/internal/operators/tap';
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
@@ -12,7 +12,7 @@ export class AuthService {
   }
 
   login(form: NgForm): Observable<any> {
-    return this.http.post<any>('/api/v1/login', {
+    return this.http.post<any>(Utility.getPath() + '/api/v1/login', {
       username: form.value.user,
       password: form.value.password
     });

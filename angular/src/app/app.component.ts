@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {NgForm} from '@angular/forms';
-import {Observable} from "rxjs";
-import {AuthService} from "./auth/auth.service";
+import {Observable} from 'rxjs';
+import {AuthService} from './auth/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +13,7 @@ export class AppComponent {
   isLoginMode = true;
   errorMsg = null;
 
-  constructor(private authService: AuthService){
+  constructor(private authService: AuthService) {
 
   }
 
@@ -38,5 +38,9 @@ export class AppComponent {
     });
 
     form.reset();
+  }
+
+  switchToRegistration(): void {
+    this.isLoginMode = false;
   }
 }
