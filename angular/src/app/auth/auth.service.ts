@@ -8,7 +8,18 @@ import {tap} from 'rxjs/internal/operators/tap';
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
+  public isAuthenticated = false;
+
   constructor(private http: HttpClient) {
+  }
+
+  private static handleError(errorRes: HttpErrorResponse): Observable<any> {
+    const errorMessage = 'An unknown error occurred!';
+    if (!errorRes.error) {
+      return throwError(errorMessage);
+    } else {
+      return throwError(errorRes.error);
+    }
   }
 
   login(form: NgForm): Observable<any> {
@@ -33,12 +44,7 @@ export class AuthService {
       }));
   }
 
-  private static handleError(errorRes: HttpErrorResponse): Observable<any> {
-    const errorMessage = 'An unknown error occurred!';
-    if (!errorRes.error) {
-      return throwError(errorMessage);
-    } else {
-      return throwError(errorRes.error);
-    }
+  logout(): any {
+
   }
 }

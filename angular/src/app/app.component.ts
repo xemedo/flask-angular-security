@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {NgForm} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {AuthService} from './auth/auth.service';
@@ -8,13 +8,15 @@ import {AuthService} from './auth/auth.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.less']
 })
-export class AppComponent {
-  title = 'angular-fe';
+export class AppComponent implements OnInit {
   isLoginMode = true;
   errorMsg = null;
 
   constructor(private authService: AuthService) {
 
+  }
+
+  ngOnInit(): void {
   }
 
   onSubmit(form: NgForm): void {
@@ -40,7 +42,7 @@ export class AppComponent {
     form.reset();
   }
 
-  switchToRegistration(): void {
-    this.isLoginMode = false;
+  toggleAuth(): void {
+    this.isLoginMode = !this.isLoginMode;
   }
 }

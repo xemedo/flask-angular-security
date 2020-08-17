@@ -1,4 +1,4 @@
-<header>
+<header class="position-absolute w-100">
   <app-header></app-header>
 </header>
 <main class="container h-100">
@@ -28,17 +28,19 @@
             </div>
           </div>
 
-          <div class="">
-            <button class="btn btn-primary mt-3"
+          <div class="d-flex align-items-center mt-4">
+            <button class="btn btn-primary"
                     [disabled]="!authForm.valid">{{ isLoginMode ? 'Einloggen' : 'Registrieren' }}</button>
+            <div *ngIf="!isLoginMode" class="ml-3">
+              <a routerLink="/" (click)="toggleAuth()">Zurück zum Login</a>
+            </div>
           </div>
         </form>
-        <br/>
       </div>
 
       <div *ngIf="isLoginMode">
         <div class="border  pl-5 pr-5 pt-4 pb-4 rounded mt-4">
-          <span>Noch kein Konto? <a href="#" (click)="switchToRegistration()">Erstelle eines.</a></span>
+          <span>Noch kein Konto? <a routerLink="/registration" (click)="toggleAuth()">Erstelle eines.</a></span>
         </div>
       </div>
 
