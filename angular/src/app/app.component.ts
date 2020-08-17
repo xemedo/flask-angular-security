@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {NgForm} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, NgForm, Validators} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {AuthService} from './auth/auth.service';
+import {MustMatch} from './shared/must-match.validator';
 
 @Component({
   selector: 'app-root',
@@ -11,16 +12,35 @@ import {AuthService} from './auth/auth.service';
 export class AppComponent implements OnInit {
   isLoginMode = true;
   errorMsg = null;
+  requestSent = false;
+  signupForm: FormGroup;
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private formBuilder: FormBuilder) {
 
   }
 
   ngOnInit(): void {
+    this.signupForm = this.formBuilder.group({
+      user: ['', Validators.required],
+      password_1: ['', [Validators.required, Validators.minLength(8)]],
+      password_2: ['', [Validators.required]],
+      email_address1: ['', [Validators.required, Validators.email]],
+      email_address2: ['', [Validators.required, Validators.email]]
+    }, {
+      validator: [
+        MustMatch('password_1', 'password_2'),
+        MustMatch('email_address1', 'email_address2')]
+    });
   }
 
-  onSubmit(form: NgForm): void {
-    if (!form.valid) {
+  // convenience getter for easy access to form fields
+  get f(): any {
+    return this.signupForm.controls;
+  }
+
+  onSubmit(): void {
+    this.requestSent = true;
+    if (!this.signupForm.valid) {
       return;
     }
 
@@ -28,21 +48,23 @@ export class AppComponent implements OnInit {
     let authObs: Observable<any>;
 
     if (this.isLoginMode) {
-      authObs = this.authService.login(form);
+      authObs = this.authService.login(this.signupForm);
     } else {
-      authObs = this.authService.register(form);
+      authObs = this.authService.register(this.signupForm);
     }
 
     authObs.subscribe(responseData => {
+      this.errorMsg = '';
       console.log(responseData);
     }, error => {
       this.errorMsg = error;
     });
 
-    form.reset();
+    this.signupForm.reset();
   }
 
   toggleAuth(): void {
+    this.requestSent = false;
     this.isLoginMode = !this.isLoginMode;
   }
 }

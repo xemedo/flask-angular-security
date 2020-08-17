@@ -1,10 +1,11 @@
 import {Injectable} from '@angular/core';
-import {NgForm} from '@angular/forms';
+import {FormGroup, NgForm} from '@angular/forms';
 import {Observable, throwError} from 'rxjs';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Utility} from '../shared/utility';
 import {catchError} from 'rxjs/operators';
 import {tap} from 'rxjs/internal/operators/tap';
+import {error} from 'selenium-webdriver';
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
@@ -22,29 +23,43 @@ export class AuthService {
     }
   }
 
-  login(form: NgForm): Observable<any> {
-    return this.http.post<any>(Utility.getPath() + '/api/v1/login', {
+  login(form: FormGroup): Observable<any> {
+    return this.http.post<any>(Utility.getPath() + '/login', {
       username: form.value.user,
       password: form.value.password
-    });
+    })
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 
-  register(form: NgForm): Observable<any> {
-    return this.http.post<string>(Utility.getPath() + '/api/v1/register', {
+  register(form: FormGroup): Observable<any> {
+    return this.http.post<string>(Utility.getPath() + '/register', {
       username: form.value.user,
-      password: form.value.password,
-      first_name: form.value.first_name,
-      last_name: form.value.last_name,
-      email_address1: form.value.email_address1,
-      email_address2: form.value.email_address2,
-      phone_number: form.value.phone_number
+      password: form.value.password_1,
+      email: form.value.email_address1
     })
       .pipe(catchError(AuthService.handleError), tap(resData => {
 
       }));
   }
 
-  logout(): any {
+  private handleError(errorRes: HttpErrorResponse): Observable<any> {
+    let errorMessage = 'An unknown error occurred!';
+    if (!errorRes.error ||
+      !errorRes.error.response ||
+      !errorRes.error.response.errors) {
+      return throwError(errorMessage);
+    }
 
+    const errorObj = errorRes.error.response.errors;
+
+    for (const prop in errorObj) {
+      if (errorObj.hasOwnProperty(prop)) {
+        errorMessage = errorObj[prop];
+      }
+    }
+
+    return throwError(errorMessage);
   }
 }
