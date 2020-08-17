@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_security import Security, SQLAlchemyUserDatastore, login_required
 from flask_restful import Api
 from flask_login import LoginManager
-
+from flask_cors import CORS
 from src.forms.flask_security_extensions import *
 
 import flask_wtf
@@ -68,6 +68,7 @@ def create_app():
     login_manager.init_app(app)
     init_login()
     configure_flask_security(app)
+    CORS(app, resources={r"/*": {"origins": "*"}})
 
     from .views.article import ArticleCreateView, ArticleGetView
 
