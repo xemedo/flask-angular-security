@@ -6,14 +6,15 @@ import {Observable, throwError} from 'rxjs';
 
 @Injectable({providedIn: 'root'})
 export class ArticlesService {
-  constructor(private http: HttpClient){
+  constructor(private http: HttpClient) {
 
   }
 
   addArticle(): Observable<any> {
-    return this.http.post<any>(Utility.getPath() + '/articles', {
-      content: 'asdf'
-    })
+    const formData: any = new FormData();
+    formData.append('content', 'asfffdadsf');
+
+    return this.http.post<any>(Utility.getPath() + '/articles', formData)
       .pipe(
         catchError(this.handleError)
       );
