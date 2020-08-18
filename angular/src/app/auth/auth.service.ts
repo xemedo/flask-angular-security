@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {FormGroup, NgForm} from '@angular/forms';
-import {Observable, Subject, throwError} from 'rxjs';
+import {BehaviorSubject, Observable, Subject, throwError} from 'rxjs';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Utility} from '../shared/utility';
 import {catchError} from 'rxjs/operators';
@@ -9,7 +9,7 @@ import {Router} from '@angular/router';
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
-  public user = new Subject();
+  public user = new BehaviorSubject<boolean>(false);
 
   constructor(private http: HttpClient, private router: Router) {
   }
