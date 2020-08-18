@@ -1,6 +1,6 @@
 from flask_restful import Resource
 from flask import request
-from flask_login import login_required, current_user
+from flask_security import login_required, current_user
 
 from .. import db
 from ..models.article import Article
@@ -23,5 +23,5 @@ class ArticleGetView(Resource):
     def get(self, id):
         article = db.session.query(Article).filter_by(id=id).first()
         if not article:
-            return 404, 'Not found.'
+            return 'Not found.', 404
         return {'id': article.id, 'content': article.content}, 200
