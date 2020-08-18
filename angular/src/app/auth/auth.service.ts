@@ -1,36 +1,49 @@
 import {Injectable} from '@angular/core';
 import {FormGroup, NgForm} from '@angular/forms';
-import {Observable, throwError} from 'rxjs';
+import {Observable, Subject, throwError} from 'rxjs';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Utility} from '../shared/utility';
 import {catchError} from 'rxjs/operators';
 import {tap} from 'rxjs/internal/operators/tap';
-import {error} from 'selenium-webdriver';
+import {Router} from '@angular/router';
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
-  public isAuthenticated = false;
+  public user = new Subject();
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router: Router) {
   }
 
-  private static handleError(errorRes: HttpErrorResponse): Observable<any> {
-    const errorMessage = 'An unknown error occurred!';
-    if (!errorRes.error) {
-      return throwError(errorMessage);
-    } else {
-      return throwError(errorRes.error);
-    }
+  private handleAuthentication(): void {
+    window.setTimeout(x => {
+      this.user.next(true);
+      this.router.navigate(['/articles']);
+    }, 2000);
+
   }
 
   login(form: FormGroup): Observable<any> {
     return this.http.post<any>(Utility.getPath() + '/login', {
-      username: form.value.user,
+      username: form.value.user_login,
       password: form.value.password
     })
       .pipe(
-        catchError(this.handleError)
+        catchError(this.handleError),
+        tap(resData => {
+          this.handleAuthentication();
+        })
       );
+  }
+
+  logout(): void {
+    this.http.post<any>(Utility.getPath() + '/logout', {})
+      .pipe(
+        catchError(this.handleError),
+        tap(resData => {
+          this.user.next(false);
+          this.router.navigate(['/']);
+        })
+      ).subscribe();
   }
 
   register(form: FormGroup): Observable<any> {
@@ -39,9 +52,12 @@ export class AuthService {
       password: form.value.password_1,
       email: form.value.email_address1
     })
-      .pipe(catchError(AuthService.handleError), tap(resData => {
-
-      }));
+      .pipe(
+        catchError(this.handleError),
+        tap(resData => {
+          this.handleAuthentication();
+        })
+      );
   }
 
   private handleError(errorRes: HttpErrorResponse): Observable<any> {

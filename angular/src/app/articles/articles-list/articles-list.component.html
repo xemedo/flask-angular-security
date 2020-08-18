@@ -1,1 +1,11 @@
-<p>articles-list works!</p>
+<div class="row">
+  <div id="wrapper" class="col-12 position-relative">
+    <div id="articles-list-wrapper">
+      articles
+    </div>
+    <div id="add-article" *ngIf="router.url !== '/articles/add'">
+      <button (click)="showEditor()">Artikel hinzufügen</button>
+    </div>
+    <router-outlet></router-outlet>
+  </div>
+</div>
