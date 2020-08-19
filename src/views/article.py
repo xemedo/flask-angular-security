@@ -4,15 +4,17 @@ from flask_security import login_required, current_user
 
 from .. import db
 from ..models.article import Article
-
+from ..schema.article import ProductSchema
 
 class ArticleCreateView(Resource):
     @login_required
     def post(self):
-        content = request.form.get('content')
-        if not content:
-            return 'No content.', 400
+        schema = ProductSchema()
+        errors = schema.validate(request.form, session=db.session)
+        if errors:
+            return errors, 400
 
+        content = request.form.get('content')
         article = Article(content=content, user_id=current_user.id)
         db.session.add(article)
         db.session.commit()
