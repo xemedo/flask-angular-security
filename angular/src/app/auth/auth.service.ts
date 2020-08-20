@@ -30,7 +30,7 @@ export class AuthService {
       })
     };
 
-    return this.http.post<any>(Utility.getPath() + '/login', {
+    return this.http.post<any>('/api/v1/login', {
       username: form.value.user_login,
       password: form.value.password
     })
@@ -43,7 +43,7 @@ export class AuthService {
   }
 
   logout(): void {
-    this.http.post<any>(Utility.getPath() + '/logout', {})
+    this.http.post<any>('/api/v1/logout', {})
       .pipe(
         catchError(this.handleError),
         tap(resData => {
@@ -54,7 +54,7 @@ export class AuthService {
   }
 
   register(form: FormGroup): Observable<any> {
-    return this.http.post<string>(Utility.getPath() + '/register', {
+    return this.http.post<string>('/api/v1/register', {
       username: form.value.user,
       password: form.value.password_1,
       email: form.value.email_address1

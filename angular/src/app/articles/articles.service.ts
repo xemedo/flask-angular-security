@@ -14,7 +14,7 @@ export class ArticlesService {
     const formData: any = new FormData();
     formData.append('content', 'asfffdadsf');
 
-    return this.http.post<any>(Utility.getPath() + '/articles', formData)
+    return this.http.post<any>('/api/v1/articles', formData)
       .pipe(
         catchError(this.handleError)
       );

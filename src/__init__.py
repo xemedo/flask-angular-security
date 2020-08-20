@@ -75,9 +75,6 @@ def configure_flask_security(app):
 
     @app.before_request
     def before_request_func():
-        # always allow if Content-Type is OPTIONS
-        if request.method == 'OPTIONS':
-            return
         if (request.endpoint == 'security.login' or request.endpoint == 'security.register' or request.endpoint == 'security.logout') and not request.is_json:
             raise InvalidHTTPHeader('Mime type must be application/json.')
 
