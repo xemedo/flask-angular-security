@@ -6,6 +6,7 @@ import {Utility} from '../shared/utility';
 import {catchError} from 'rxjs/operators';
 import {tap} from 'rxjs/internal/operators/tap';
 import {Router} from '@angular/router';
+import { HttpHeaders } from '@angular/common/http';
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
@@ -23,10 +24,16 @@ export class AuthService {
   }
 
   login(form: FormGroup): Observable<any> {
+    const options = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json'
+      })
+    };
+
     return this.http.post<any>(Utility.getPath() + '/login', {
       username: form.value.user_login,
       password: form.value.password
-    })
+    }, options)
       .pipe(
         catchError(this.handleError),
         tap(resData => {
