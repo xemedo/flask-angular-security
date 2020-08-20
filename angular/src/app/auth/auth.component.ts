@@ -30,13 +30,10 @@ export class AuthComponent implements OnInit {
     this.signupForm = this.formBuilder.group({
       user: ['', Validators.required],
       password_1: ['', [Validators.required]],
-      password_2: ['', [Validators.required]],
       email_address1: ['', [Validators.required, Validators.email]],
       email_address2: ['', [Validators.required, Validators.email]]
     }, {
-      validator: [
-        MustMatch('password_1', 'password_2'),
-        MustMatch('email_address1', 'email_address2')]
+      validator: [MustMatch('email_address1', 'email_address2')]
     });
 
     this.loginForm = this.formBuilder.group({

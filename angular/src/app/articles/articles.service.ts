@@ -19,6 +19,10 @@ export class ArticlesService {
       );
   }
 
+  getArticles(): any {
+
+  }
+
   private handleError(errorRes: HttpErrorResponse): Observable<any> {
     let errorMessage = 'An unknown error occurred!';
     if (!errorRes.error ||

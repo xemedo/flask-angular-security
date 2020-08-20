@@ -45,27 +45,6 @@
 
         <div *ngIf="!isLoginMode">
           <div class="form-group">
-            <label for="password_2">Passwort Wiederholung *</label>
-            <input
-              type="password"
-              id="password_2"
-              class="form-control"
-              name="password_2"
-              formControlName="password_2"
-              [ngClass]="{ 'is-invalid': requestSent && fsu.password_2.errors }"
-            >
-            <div
-              *ngIf="requestSent && fsu.password_2.errors"
-              class="invalid-feedback">
-                <span
-                  class="help-block"
-                  *ngIf="fsu.password_2.errors.required">Bitte ein gültiges Passwort angeben.</span>
-              <span
-                class="help-block"
-                *ngIf="fsu.password_2.errors.mustMatch">Die Passwörter stimmen nicht überein.</span>
-            </div>
-          </div>
-          <div class="form-group">
             <label for="email_address1">E-Mail *</label>
             <input
               type="text"

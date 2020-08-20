@@ -16,9 +16,8 @@ export class ArticlesCreationComponent implements OnInit {
 
   addArticle(): void {
     this.articlesService.addArticle().subscribe(responseData => {
-      console.debug(responseData);
+
     }, error => {
-      console.debug(error);
     });
   }
 }
