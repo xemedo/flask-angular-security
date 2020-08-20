@@ -95,9 +95,11 @@ def create_app():
     CORS(app)
 
     from .views.article import ArticleCreateView, ArticleGetView
+    from .views.user import UserGetView
 
     api.add_resource(ArticleCreateView, "/articles")
     api.add_resource(ArticleGetView, "/articles/<id>")
+    api.add_resource(UserGetView, "/users/current")
 
     @app.errorhandler(InvalidHTTPHeader)
     def handle_invalid_usage(error):
