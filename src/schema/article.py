@@ -3,7 +3,7 @@ from marshmallow import validates, ValidationError
 from src.models.article import Article
 
 
-class ProductSchema(SQLAlchemyAutoSchema):
+class ArticleSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = Article
         load_instance = True

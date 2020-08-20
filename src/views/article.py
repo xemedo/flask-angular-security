@@ -4,12 +4,12 @@ from flask_security import current_user, auth_required
 
 from .. import db
 from ..models.article import Article
-from ..schema.article import ProductSchema
+from ..schema.article import ArticleSchema
 
-class ArticleCreateView(Resource):
+class MultipleArticleView(Resource):
     @auth_required()
     def post(self):
-        schema = ProductSchema()
+        schema = ArticleSchema()
         errors = schema.validate(request.form, session=db.session)
         if errors:
             return errors, 400
@@ -19,6 +19,12 @@ class ArticleCreateView(Resource):
         db.session.add(article)
         db.session.commit()
         return {'id': article.id}, 200
+
+    @auth_required()
+    def get(self):
+        schema = ArticleSchema()
+        articles = db.session.query(Article).filter_by(user_id=current_user.id)
+        return schema.dump(articles, many=True), 200
 
 
 class ArticleGetView(Resource):

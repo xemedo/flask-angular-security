@@ -94,10 +94,10 @@ def create_app():
     # set only in development
     CORS(app)
 
-    from .views.article import ArticleCreateView, ArticleGetView
+    from .views.article import MultipleArticleView, ArticleGetView
     from .views.user import UserGetView
 
-    api.add_resource(ArticleCreateView, "/articles")
+    api.add_resource(MultipleArticleView, "/articles")
     api.add_resource(ArticleGetView, "/articles/<id>")
     api.add_resource(UserGetView, "/users/current")
 
