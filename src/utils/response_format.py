@@ -6,3 +6,9 @@ def build_error_response(msg, code):
     response = jsonify(data)
     response.status_code = code
     return response
+
+def build_data_response(data, code=200):
+    res = {"meta": {"code": code}, "response": {"data": data}}
+    response = jsonify(res)
+    response.status_code = code
+    return response

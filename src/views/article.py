@@ -5,6 +5,7 @@ from flask_security import current_user, auth_required
 from .. import db
 from ..models.article import Article
 from ..schema.article import ArticleSchema
+from ..utils.response_format import build_data_response
 
 
 class MultipleArticleView(Resource):
@@ -19,13 +20,13 @@ class MultipleArticleView(Resource):
         article = Article(content=content, user_id=current_user.id)
         db.session.add(article)
         db.session.commit()
-        return {"id": article.id}, 200
+        return build_data_response({"id": article.id}, 200)
 
     @auth_required()
     def get(self):
         schema = ArticleSchema()
         articles = db.session.query(Article).filter_by(user_id=current_user.id)
-        return schema.dump(articles, many=True), 200
+        return build_data_response(schema.dump(articles, many=True), 200)
 
 
 class ArticleGetView(Resource):
