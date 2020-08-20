@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from './auth.service';
 import {MustMatch} from '../shared/must-match.validator';
 import {Observable} from 'rxjs';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-auth',
@@ -15,13 +16,17 @@ export class AuthComponent implements OnInit {
   requestSent = false;
   signupForm: FormGroup;
   loginForm: FormGroup;
-  authenticated = false;
+  hideForm = false;
 
-  constructor(private authService: AuthService, private formBuilder: FormBuilder) {
-
-  }
+  constructor(private authService: AuthService, private formBuilder: FormBuilder, private router: Router) {}
 
   ngOnInit(): void {
+    this.authService.getAuthenticatedUser().subscribe(user => {
+      if (user.id !== null) {
+        this.router.navigate(['/articles']);
+      }
+    });
+
     this.signupForm = this.formBuilder.group({
       user: ['', Validators.required],
       password_1: ['', [Validators.required]],
@@ -68,10 +73,8 @@ export class AuthComponent implements OnInit {
 
     authObs.subscribe(responseData => {
       this.errorMsg = '';
-      this.authenticated = true;
     }, error => {
       this.errorMsg = error;
-      this.authenticated = false;
     });
   }
 

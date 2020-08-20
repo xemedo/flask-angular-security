@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AuthService} from '../auth/auth.service';
 import {Router} from '@angular/router';
 
@@ -9,17 +9,36 @@ import {Router} from '@angular/router';
 })
 export class HeaderComponent implements OnInit {
   public isAuthenticated = false;
-  constructor(private authService: AuthService, private router: Router) { }
+  public username = '';
+
+  constructor(private authService: AuthService, private router: Router) {
+  }
 
   ngOnInit(): void {
-    this.authService.user.subscribe(
-      (isAuthenticated: boolean) => {
-        this.isAuthenticated = isAuthenticated;
+    this.authService.getAuthenticatedUser().subscribe(user => {
+      if (user.id == null) {
+        this.isAuthenticated = false;
+        this.username = '';
+      } else {
+        this.isAuthenticated = true;
+        this.username = user.username;
       }
-    );
+    });
+
+    this.authService.authenticationChanged.subscribe(() => {
+      this.authService.getAuthenticatedUser().subscribe(user => {
+        if (user.id == null) {
+          this.isAuthenticated = false;
+          this.username = '';
+        } else {
+          this.isAuthenticated = true;
+          this.username = user.username;
+        }
+      });
+    });
   }
 
   logout(): void {
-    this.authService.logout();
+    this.authService.logout().subscribe();
   }
 }

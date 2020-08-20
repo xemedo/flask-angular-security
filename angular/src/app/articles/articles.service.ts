@@ -1,5 +1,4 @@
 import {Injectable} from '@angular/core';
-import {Utility} from '../shared/utility';
 import {catchError, tap} from 'rxjs/operators';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';

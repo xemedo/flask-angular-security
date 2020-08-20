@@ -1,35 +1,28 @@
 import {Injectable} from '@angular/core';
-import {FormGroup, NgForm} from '@angular/forms';
-import {BehaviorSubject, Observable, Subject, throwError} from 'rxjs';
+import {FormGroup} from '@angular/forms';
+import {Observable, Subject, throwError} from 'rxjs';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {Utility} from '../shared/utility';
-import {catchError} from 'rxjs/operators';
+import {catchError, map, take} from 'rxjs/operators';
 import {tap} from 'rxjs/internal/operators/tap';
 import {Router} from '@angular/router';
-import { HttpHeaders } from '@angular/common/http';
+import {UserModel} from '../model/UserModel';
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
-  public user = new BehaviorSubject<boolean>(false);
 
+  authenticationChanged = new Subject();
   constructor(private http: HttpClient, private router: Router) {
   }
 
   private handleAuthentication(): void {
     window.setTimeout(x => {
-      this.user.next(true);
+      this.authenticationChanged.next();
       this.router.navigate(['/articles']);
     }, 2000);
 
   }
 
   login(form: FormGroup): Observable<any> {
-    const options = {
-      headers: new HttpHeaders({
-        'Content-Type':  'application/json'
-      })
-    };
-
     return this.http.post<any>('/api/v1/login', {
       username: form.value.user_login,
       password: form.value.password
@@ -42,15 +35,15 @@ export class AuthService {
       );
   }
 
-  logout(): void {
-    this.http.post<any>('/api/v1/logout', {})
+  logout(): Observable<any> {
+    return this.http.post<any>('/api/v1/logout', {})
       .pipe(
         catchError(this.handleError),
         tap(resData => {
-          this.user.next(false);
+          this.authenticationChanged.next();
           this.router.navigate(['/']);
         })
-      ).subscribe();
+      );
   }
 
   register(form: FormGroup): Observable<any> {
@@ -67,19 +60,35 @@ export class AuthService {
       );
   }
 
+  getAuthenticatedUser(): Observable<UserModel>  {
+    return this.http.get<any>('/api/v1/users/current', {})
+      .pipe(
+        catchError(this.handleError),
+        take(1),
+        map(response => {
+          return new UserModel(response.user_id, response.username, response.email);
+        })
+      );
+  }
+
   private handleError(errorRes: HttpErrorResponse): Observable<any> {
     let errorMessage = 'An unknown error occurred!';
     if (!errorRes.error ||
-      !errorRes.error.response ||
-      !errorRes.error.response.errors) {
+      !errorRes.error.response) {
       return throwError(errorMessage);
     }
 
-    const errorObj = errorRes.error.response.errors;
+    if (errorRes.error.response.error) {
+      return throwError(errorRes.error.response.error);
 
-    for (const prop in errorObj) {
-      if (errorObj.hasOwnProperty(prop)) {
-        errorMessage = errorObj[prop];
+    } else if (errorRes.error.response.errors) {
+
+      const errorObj = errorRes.error.response.errors;
+
+      for (const prop in errorObj) {
+        if (errorObj.hasOwnProperty(prop)) {
+          errorMessage = errorObj[prop];
+        }
       }
     }
 
