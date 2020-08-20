@@ -75,7 +75,10 @@ def configure_flask_security(app):
 
     @app.before_request
     def before_request_func():
-        if not request.is_json:
+        # always allow if Content-Type is OPTIONS
+        if request.method == 'OPTIONS':
+            return
+        if (request.endpoint == 'security.login' or request.endpoint == 'security.register' or request.endpoint == 'security.logout') and not request.is_json:
             raise InvalidHTTPHeader('Mime type must be application/json.')
 
 
@@ -90,6 +93,8 @@ def create_app():
     db.init_app(app)
     api = Api(app, prefix='/api/v1')
     configure_flask_security(app)
+
+    # set only in development
     CORS(app)
 
     from .views.article import ArticleCreateView, ArticleGetView

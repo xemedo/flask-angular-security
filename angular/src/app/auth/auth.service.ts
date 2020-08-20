@@ -33,7 +33,7 @@ export class AuthService {
     return this.http.post<any>(Utility.getPath() + '/login', {
       username: form.value.user_login,
       password: form.value.password
-    }, options)
+    })
       .pipe(
         catchError(this.handleError),
         tap(resData => {
