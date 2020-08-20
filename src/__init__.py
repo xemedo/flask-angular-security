@@ -90,7 +90,7 @@ def create_app():
     db.init_app(app)
     api = Api(app, prefix='/api/v1')
     configure_flask_security(app)
-    CORS(app, resources={r"/*": {"origins": "*"}})
+    CORS(app)
 
     from .views.article import ArticleCreateView, ArticleGetView
 
