@@ -1,13 +1,13 @@
 from flask_restful import Resource
 from flask import request
-from flask_security import login_required, current_user
+from flask_security import current_user, auth_required
 
 from .. import db
 from ..models.article import Article
 from ..schema.article import ProductSchema
 
 class ArticleCreateView(Resource):
-    @login_required
+    @auth_required()
     def post(self):
         schema = ProductSchema()
         errors = schema.validate(request.form, session=db.session)
@@ -20,8 +20,9 @@ class ArticleCreateView(Resource):
         db.session.commit()
         return {'id': article.id}, 200
 
+
 class ArticleGetView(Resource):
-    @login_required
+    @auth_required()
     def get(self, id):
         article = db.session.query(Article).filter_by(id=id).first()
         if not article:

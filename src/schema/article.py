@@ -15,5 +15,5 @@ class ProductSchema(SQLAlchemyAutoSchema):
         :param value:
         :return:
         '''
-        if len(value) < 10:
-            raise ValidationError('Content is too short.')
+        if len(value) < 10 or value.isspace():
+            raise ValidationError('Content is not valid.')
