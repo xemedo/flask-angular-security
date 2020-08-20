@@ -1,15 +1,28 @@
-from flask import Flask
+from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_security import Security
 from flask_restful import Api
 from flask_cors import CORS
 from src.forms.flask_security_extensions import *
-
 import flask_wtf
 
+class InvalidHTTPHeader(Exception):
+    status_code = 400
 
-app = Flask(__name__)
+    def __init__(self, message, status_code=None, payload=None):
+        Exception.__init__(self)
+        self.message = message
+        if status_code is not None:
+            self.status_code = status_code
+        self.payload = payload
+
+    def to_dict(self):
+        rv = dict(self.payload or ())
+        rv['message'] = self.message
+        return rv
+
 db = SQLAlchemy()
+
 
 def init_login(security):
     @security.login_manager.unauthorized_handler
@@ -53,10 +66,18 @@ def configure_flask_security(app):
 
     app.config['SECURITY_UNAUTHORIZED_VIEW'] = None
 
+    app.config['SECURITY_URL_PREFIX'] = '/api/v1'
+
     # Enable CSRF protection
     flask_wtf.CSRFProtect(app)
     security = Security(app, user_datastore, confirm_register_form=ExtendedRegisterForm, login_form=ExtendedLoginForm)
     init_login(security)
+
+    @app.before_request
+    def before_request_func():
+        if not request.is_json:
+            raise InvalidHTTPHeader('Mime type must be application/json.')
+
 
 def create_app():
 
@@ -67,7 +88,7 @@ def create_app():
     configure_app(app)
 
     db.init_app(app)
-    api = Api(app)
+    api = Api(app, prefix='/api/v1')
     configure_flask_security(app)
     CORS(app, resources={r"/*": {"origins": "*"}})
 
@@ -76,8 +97,14 @@ def create_app():
     api.add_resource(ArticleCreateView, "/articles")
     api.add_resource(ArticleGetView, "/articles/<id>")
 
+    @app.errorhandler(InvalidHTTPHeader)
+    def handle_invalid_usage(error):
+        response = jsonify(error.to_dict())
+        response.status_code = error.status_code
+        return response
+
     return app
 
-def configure_app(app):  # pragma: no cover
+def configure_app(app):
     from src.config import Config
     app.config.from_object(Config)
