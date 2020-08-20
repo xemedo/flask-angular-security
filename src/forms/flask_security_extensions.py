@@ -2,11 +2,13 @@ from flask_security.forms import ConfirmRegisterForm, LoginForm
 from wtforms import StringField
 from flask_security.forms import Required
 
+
 class ExtendedRegisterForm(ConfirmRegisterForm):
     username = StringField("Username", [Required()])
 
+
 class ExtendedLoginForm(LoginForm):
-    email = StringField('Username or Email Address')
+    email = StringField("Username or Email Address")
     username = StringField("Username")
 
     def validate(self):
@@ -16,6 +18,7 @@ class ExtendedLoginForm(LoginForm):
             hash_password,
         )
         from flask_security.confirmable import requires_confirmation
+
         if not super(LoginForm, self).validate():
             return False
 
