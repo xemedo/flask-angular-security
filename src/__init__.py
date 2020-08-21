@@ -91,13 +91,20 @@ def configure_flask_security(app):
     init_login(security)
 
     @app.before_request
-    def before_request_func():
+    def is_valid_request():
+        '''
+        Checks if request is valid.
+        :return:
+        '''
         if (
             request.endpoint == "security.login"
             or request.endpoint == "security.register"
             or request.endpoint == "security.logout"
-        ) and not request.is_json:
-            raise CustomClientError("Mime type must be application/json.")
+        ):
+            if not request.is_json:
+                raise CustomClientError("Mime type must be application/json.")
+            if request.method != 'POST':
+                raise CustomClientError("HTTP method is not valid.")
 
 
 def create_app():
