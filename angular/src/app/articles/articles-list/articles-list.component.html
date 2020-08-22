@@ -1,10 +1,24 @@
 <div class="row">
-  <div id="wrapper" class="col-12 position-relative">
+  <div
+    id="wrapper"
+    class="col-12 position-relative">
     <div id="articles-list-wrapper">
-      articles
+      <ul class="list-group">
+        <li
+          class="list-group-item"
+          *ngFor="let article of articles;">
+          {{ article }}
+        </li>
+      </ul>
     </div>
-    <div id="add-article" class="mt-5" *ngIf="router.url !== '/articles/add'">
-      <button class="btn btn-primary" (click)="showEditor()">Artikel hinzufügen</button>
+    <div
+      id="add-article"
+      class="mt-5"
+      *ngIf="router.url !== '/articles/add'">
+      <button
+        class="btn btn-primary"
+        (click)="showEditor()">Artikel hinzufügen
+      </button>
     </div>
     <router-outlet></router-outlet>
   </div>

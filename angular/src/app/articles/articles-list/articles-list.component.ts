@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
+import {ArticlesService} from '../articles.service';
 
 @Component({
   selector: 'app-articles-list',
@@ -8,10 +9,16 @@ import {ActivatedRoute, Router} from '@angular/router';
 })
 export class ArticlesListComponent implements OnInit {
 
-  constructor(private route: ActivatedRoute, public router: Router) {
+  public articles: string[];
+  constructor(private articlesService: ArticlesService, private route: ActivatedRoute, public router: Router) {
   }
 
   ngOnInit(): void {
+    this.articlesService.fetchArticles();
+
+    this.articlesService.articlesChanged.subscribe((articles: string[]) => {
+      this.articles = articles;
+    });
   }
 
   showEditor(): void {

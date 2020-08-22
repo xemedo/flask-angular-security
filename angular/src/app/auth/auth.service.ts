@@ -65,8 +65,8 @@ export class AuthService {
       .pipe(
         catchError(this.handleError),
         take(1),
-        map(response => {
-          return new UserModel(response.user_id, response.username, response.email);
+        map(resp => {
+          return new UserModel(resp.response.data.user_id, resp.response.data.username, resp.response.data.email);
         })
       );
   }

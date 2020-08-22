@@ -1,12 +1,33 @@
 <div class="row">
-  <div id="wrapper" class="col-12 position-relative">
-    <div>
-      <textarea class="form-control" rows="7">
-
+  <div
+    id="wrapper"
+    class="col-12 position-relative">
+      <textarea
+        class="form-control"
+        rows="7"
+        #textAreaElement>
       </textarea>
-    </div>
-    <div id="add-article" class="mt-5">
-      <button class="btn btn-primary" (click)="addArticle()">Artikel hinzufügen</button>
+    <div class="row mt-4">
+      <div
+        id="add-article"
+        class="col-4">
+        <button
+          class="btn btn-primary"
+          (click)="addArticle(textAreaElement.value)">Artikel hinzufügen
+        </button>
+      </div>
+      <div class="col-8" *ngIf="message !== ''">
+        <div
+          class="alert alert-danger"
+          *ngIf="!success">
+          <p>{{ message }}</p>
+        </div>
+        <div
+          class="alert alert-success"
+          *ngIf="success">
+          <p>Artikel erfolgreich hinzugefügt.</p>
+        </div>
+      </div>
     </div>
   </div>
 </div>

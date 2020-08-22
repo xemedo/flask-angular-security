@@ -7,17 +7,21 @@ import {ArticlesService} from '../articles.service';
   styleUrls: ['./articles-creation.component.less']
 })
 export class ArticlesCreationComponent implements OnInit {
-
+  public message = '';
+  public success = false;
   constructor(private articlesService: ArticlesService) {
   }
 
   ngOnInit(): void {
   }
 
-  addArticle(): void {
-    this.articlesService.addArticle().subscribe(responseData => {
-
+  addArticle(text: string): void {
+    this.articlesService.addArticle(text).subscribe(responseData => {
+      this.success = true;
+      this.message = 'Artikel erfolgreich hinzugefügt';
     }, error => {
+      this.success = false;
+      this.message = error;
     });
   }
 }
