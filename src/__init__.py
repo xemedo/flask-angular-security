@@ -6,6 +6,8 @@ from flask_restful import Api
 from flask_cors import CORS
 from src.forms.flask_security_extensions import *
 import flask_wtf
+import click
+from flask.cli import with_appcontext
 
 
 class CustomClientError(Exception):
@@ -31,12 +33,6 @@ def init_login(security):
     @security.login_manager.unauthorized_handler
     def unauth_handler():
         return "Please log in to access this page.", 401
-
-
-def reinit_db(app):
-    with app.app_context():
-        db.drop_all()
-        db.create_all()
 
 
 def configure_flask_security(app):
@@ -145,6 +141,14 @@ def create_app():
             status_code = 400
 
         return build_error_response(msg, status_code)
+
+    @app.cli.add_command
+    @click.command("init-db")
+    @with_appcontext
+    def init_db_command():
+        db.drop_all()
+        db.create_all()
+        print("Initialized database.")
 
     return app
 
