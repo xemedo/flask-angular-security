@@ -25,6 +25,7 @@ class ExtendedLoginForm(LoginForm):
         # try login using email
         self.user = _datastore.get_user(self.email.data)
 
+        # if that didn't work try log in using the username
         if self.user is None:
             self.user = _datastore.get_user(self.username.data)
 

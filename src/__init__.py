@@ -29,12 +29,6 @@ class CustomClientError(Exception):
 db = SQLAlchemy()
 
 
-def init_login(security):
-    @security.login_manager.unauthorized_handler
-    def unauth_handler():
-        return "Please log in to access this page.", 401
-
-
 def configure_flask_security(app):
     from .models.user import user_datastore
 
@@ -80,13 +74,12 @@ def configure_flask_security(app):
 
     # Enable CSRF protection
     flask_wtf.CSRFProtect(app)
-    security = Security(
+    Security(
         app,
         user_datastore,
         confirm_register_form=ExtendedRegisterForm,
         login_form=ExtendedLoginForm,
     )
-    init_login(security)
 
     @app.before_request
     def is_valid_request():
