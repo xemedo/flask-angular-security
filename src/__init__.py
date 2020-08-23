@@ -72,6 +72,8 @@ def configure_flask_security(app):
     # disable redirects because Angular has its own forms
     app.config["SECURITY_REDIRECT_BEHAVIOR"] = "spa"
 
+    # don't use the default unauthorized view since we implement
+    # our own in angular
     app.config["SECURITY_UNAUTHORIZED_VIEW"] = None
 
     app.config["SECURITY_URL_PREFIX"] = "/api/v1"
