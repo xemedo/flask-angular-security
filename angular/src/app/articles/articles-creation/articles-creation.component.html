@@ -5,18 +5,19 @@
       <textarea
         class="form-control"
         rows="7"
-        #textAreaElement>
-      </textarea>
+        #textAreaElement></textarea>
     <div class="row mt-4">
       <div
         id="add-article"
         class="col-4">
         <button
           class="btn btn-primary"
-          (click)="addArticle(textAreaElement.value)">Artikel hinzufügen
+          (click)="addArticle(textAreaElement.value)">Add article
         </button>
       </div>
-      <div class="col-8" *ngIf="message !== ''">
+      <div
+        class="col-8"
+        *ngIf="message !== ''">
         <div
           class="alert alert-danger"
           *ngIf="!success">
@@ -25,7 +26,7 @@
         <div
           class="alert alert-success"
           *ngIf="success">
-          <p>Artikel erfolgreich hinzugefügt.</p>
+          <p>Articel successfully created.</p>
         </div>
       </div>
     </div>

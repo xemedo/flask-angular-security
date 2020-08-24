@@ -7,7 +7,7 @@
         (ngSubmit)="onSubmit()"
       >
         <div class="form-group">
-          <label for="user">Benutzername *</label>
+          <label for="user">Username *</label>
           <input
             type="text"
             id="user"
@@ -21,11 +21,11 @@
             class="invalid-feedback">
               <span
                 class="help-block"
-                *ngIf="fsu.user.errors.required">Bitte einen gültigen Benutzername angeben.</span>
+                *ngIf="fsu.user.errors.required">Please enter a valid username.</span>
           </div>
         </div>
         <div class="form-group">
-          <label for="password_1">Passwort *</label>
+          <label for="password_1">Password *</label>
           <input
             type="password"
             id="password_1"
@@ -39,13 +39,13 @@
             class="invalid-feedback">
               <span
                 class="help-block"
-                *ngIf="fsu.password_1.errors.required">Bitte ein gültige Passwort angeben.</span>
+                *ngIf="fsu.password_1.errors.required">Please enter a valid password.</span>
           </div>
         </div>
 
         <div *ngIf="!isLoginMode">
           <div class="form-group">
-            <label for="email_address1">E-Mail *</label>
+            <label for="email_address1">Email *</label>
             <input
               type="text"
               id="email_address1"
@@ -60,11 +60,11 @@
                 <span
                   class="help-block"
                   *ngIf="fsu.email_address1.errors.required ||
-                  fsu.email_address1.errors.email">Bitte eine gültige Email Adresse angeben.</span>
+                  fsu.email_address1.errors.email">Please enter a valid email address.</span>
             </div>
           </div>
           <div class="form-group">
-            <label for="email_address2">E-Mail Wiederholung *</label>
+            <label for="email_address2">Repeat email *</label>
             <input
               type="text"
               id="email_address2"
@@ -79,10 +79,10 @@
                 <span
                   class="help-block"
                   *ngIf="fsu.email_address2.errors.required ||
-                  fsu.email_address2.errors.email">Bitte eine gültige Email Adresse angeben.</span>
+                  fsu.email_address2.errors.email">Please enter a valid email address.</span>
               <span
                 class="help-block"
-                *ngIf="fsu.email_address2.errors.mustMatch">Die E-Mail Adressen stimmen nicht überein.</span>
+                *ngIf="fsu.email_address2.errors.mustMatch">Email addresses do not match.</span>
             </div>
           </div>
         </div>
@@ -90,13 +90,13 @@
         <div class="d-flex align-items-center mt-4">
           <button
             class="btn btn-primary"
-          >Registrieren
+          >Register
           </button>
           <div
             class="ml-3">
             <a
               routerLink="/"
-              (click)="toggleAuth()">Zurück zum Login</a>
+              (click)="toggleAuth()">Back to login</a>
           </div>
         </div>
       </form>
@@ -107,7 +107,7 @@
         *ngIf="isLoginMode"
       >
         <div class="form-group">
-          <label for="user_login">Benutzername *</label>
+          <label for="user_login">Username *</label>
           <input
             type="text"
             id="user_login"
@@ -121,11 +121,11 @@
             class="invalid-feedback">
               <span
                 class="help-block"
-                *ngIf="fl.user_login.errors.required">Bitte einen gültigen Benutzername angeben.</span>
+                *ngIf="fl.user_login.errors.required">Please enter a valid username.</span>
           </div>
         </div>
         <div class="form-group">
-          <label for="password_1">Passwort *</label>
+          <label for="password">Password *</label>
           <input
             type="password"
             id="password"
@@ -139,14 +139,14 @@
             class="invalid-feedback">
               <span
                 class="help-block"
-                *ngIf="fl.password.errors.required">Bitte ein gültige Passwort angeben.</span>
+                *ngIf="fl.password.errors.required">Please enter a valid password.</span>
           </div>
         </div>
 
         <div class="d-flex align-items-center mt-4">
           <button
             class="btn btn-primary"
-          >Einloggen
+          >Login
           </button>
         </div>
       </form>
@@ -163,16 +163,16 @@
       <div
         class="alert alert-success"
         *ngIf="errorMsg === ''">
-        <p *ngIf="isLoginMode">Login erfolgreich</p>
-        <p *ngIf="!isLoginMode">Benutzerkonto erstellt. Überprüfe dein E-Mail Postfach!</p>
+        <p *ngIf="isLoginMode">Login successful</p>
+        <p *ngIf="!isLoginMode">User account successfully created. Please check your emails!</p>
       </div>
     </div>
 
     <div *ngIf="isLoginMode">
       <div class="border  pl-5 pr-5 pt-4 pb-4 rounded mt-4">
-          <span>Noch kein Konto? <a
+          <span>No account yet? <a
             routerLink="/registration"
-            (click)="toggleAuth()">Erstelle eines.</a></span>
+            (click)="toggleAuth()">Create one.</a></span>
       </div>
     </div>
 

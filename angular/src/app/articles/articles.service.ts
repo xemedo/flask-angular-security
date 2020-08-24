@@ -5,7 +5,7 @@ import {Observable, Subject, throwError} from 'rxjs';
 
 @Injectable({providedIn: 'root'})
 export class ArticlesService {
-  public articles: string[] = new Array();
+  public articles: string[];
   public articlesChanged = new Subject<string[]>();
 
   constructor(private http: HttpClient) {

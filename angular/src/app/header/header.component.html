@@ -20,13 +20,13 @@
       class="navbar-nav align-items-center"
       *ngIf="isAuthenticated">
       <li class="nav-item">
-        <span style="padding:0.5rem 1rem;">Hallo {{username}}</span>
+        <span style="padding:0.5rem 1rem;">Hello {{username}}</span>
       </li>
       <li class="nav-item">
         <a
           style="cursor: pointer;"
           class="nav-link"
-          (click)="logout()">Ausloggen</a>
+          (click)="logout()">Logout</a>
       </li>
     </ul>
   </div>

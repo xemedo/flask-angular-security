@@ -14,6 +14,7 @@ export class ArticlesListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.articlesService.articles = new Array<string>();
     this.articlesService.fetchArticles();
 
     this.articlesService.articlesChanged.subscribe((articles: string[]) => {
