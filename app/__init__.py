@@ -4,7 +4,7 @@ from sqlalchemy.exc import IntegrityError
 from flask_security import Security
 from flask_restful import Api
 from flask_cors import CORS
-from src.forms.flask_security_extensions import *
+from app.forms.flask_security_extensions import *
 import flask_wtf
 import click
 from flask.cli import with_appcontext
@@ -110,6 +110,7 @@ def create_app():
     configure_flask_security(app)
 
     # set only in development
+    # in production, use a reverse proxy like Nginx
     CORS(app)
 
     from .views.article import MultipleArticleView, ArticleGetView
@@ -127,7 +128,7 @@ def create_app():
 
     @app.errorhandler(IntegrityError)
     def handle_db_error(error):
-        from src.utils.response_format import build_error_response
+        from app.utils.response_format import build_error_response
 
         msg = "Internal server error."
         status_code = 500
@@ -141,14 +142,20 @@ def create_app():
     @click.command("init-db")
     @with_appcontext
     def init_db_command():
-        db.drop_all()
-        db.create_all()
+        init_db(app)
         print("Initialized database.")
+
+    init_db(app)
 
     return app
 
 
 def configure_app(app):
-    from src.config import Config
+    from app.config import Config
 
     app.config.from_object(Config)
+
+def init_db(app):
+    with app.app_context():
+        db.drop_all()
+        db.create_all()

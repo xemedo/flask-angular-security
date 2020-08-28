@@ -1,6 +1,6 @@
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from marshmallow import validates, ValidationError
-from src.models.article import Article
+from app.models.article import Article
 
 
 class ArticleSchema(SQLAlchemyAutoSchema):
